@@ -23,7 +23,6 @@ class ModelCustomViewSet(
 class DatesCreateListDestroy(ModelCustomViewSet):
     serializer_class = DatesSerializer
     queryset = Dates.objects.all()
-    # permission_classes = [permissions.IsAuthenticated]
     permission_classes = []
 
     def get_serializer_class(self):
@@ -31,8 +30,6 @@ class DatesCreateListDestroy(ModelCustomViewSet):
             return DatesCreateSerializer
         elif self.action == 'list':
             return DatesListSerializer
-        # elif self.action == 'update':
-        #     return OrderedProductsUpdateSerializer
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
@@ -59,7 +56,12 @@ class DatesCreateListDestroy(ModelCustomViewSet):
         )
         # print(url)
         response = requests.get(url)
+        print(response)
+        print(response.content)
+        print(response.headers)
+
         serializer.validated_data['fact'] = response.content.decode("utf-8")
+        # response.json()  # < do sprawdzenia
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
@@ -75,3 +77,23 @@ class DatesCreateListDestroy(ModelCustomViewSet):
         else:
             print('nie ma autoryzacji')
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ListViewset(mixins.ListModelMixin, GenericViewSet):
+    pass
+
+
+class PopularViewSet(ListViewset):
+    serializer_class = DatesSerializer
+    queryset = Dates.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

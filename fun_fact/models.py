@@ -28,22 +28,3 @@ class Dates(models.Model):
         ]
     )
     fact = models.CharField(max_length=300)
-
-
-class Month(models.Model):
-    MONTHS_CHOICES = (
-        ('January', 1),
-        ('February', 2),
-        ('March', 3),
-        ('April', 4),
-        ('May', 5),
-        ('June', 6),
-        ('July', 7),
-        ('August', 8),
-        ('September', 9),
-        ('October', 10),
-        ('November', 11),
-        ('December', 12),
-    )
-    month = models.CharField(choices=MONTHS_CHOICES, max_length=60, unique=True)
-    days_checked = models.IntegerField()
