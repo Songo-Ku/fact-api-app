@@ -1,13 +1,26 @@
 import requests
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from fun_fact.models import Dates
 from fun_fact.numbersapi import URL_NUM_API
 from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer
 
 
-class DatesViewSets(viewsets.ModelViewSet):
+class ModelCustomViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    """
+    A Customviewset that provides default `create()`, `destroy()` and `list()` actions.
+    """
+    pass
+
+
+class DatesCreateListDestroy(ModelCustomViewSet):
     serializer_class = DatesSerializer
     queryset = Dates.objects.all()
     # permission_classes = [permissions.IsAuthenticated]
@@ -22,13 +35,15 @@ class DatesViewSets(viewsets.ModelViewSet):
         #     return OrderedProductsUpdateSerializer
         return super().get_serializer_class()
 
-    def get_permissions(self):
-        if self.action == 'destroy':
-            # permission_classes = [permissions.IsAuthenticated]
-            permission_classes = []
-        else:
-            permission_classes = []
-        return [permission() for permission in permission_classes]
+    def create(self, request, *args, **kwargs):
+        print('jestem w create')
+        print(request.data.get("month"))
+        serializer = self.get_serializer(data=request.data)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         print(serializer.validated_data['month'])
@@ -60,12 +75,3 @@ class DatesViewSets(viewsets.ModelViewSet):
         else:
             print('nie ma autoryzacji')
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-
-
-
-
-
-

@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from fun_fact.views import DatesViewSets
+from fun_fact.views import DatesCreateListDestroy
 
 router = DefaultRouter()
-router.register(r'facts', DatesViewSets, basename="facts")
+router.register(r'dates', DatesCreateListDestroy, basename='date')
 
 app_name = 'fun_fact'
 
