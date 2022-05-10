@@ -45,14 +45,14 @@ class DatesCreateSerializer(serializers.ModelSerializer):
             return MONTHS_DICT.get(str(value))
         else:
             raise serializers.ValidationError("Please select month from range 1-12")
-        return value
 
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        day = attrs.get('day')
+        return attrs
 
-# class PopularListSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Dates
-#         fields = ['month', 'day', 'days_checked']
-#         read_only_fields = ['pk', 'fact']
+    def xxxxdwdw(self):
+        pass  #zrobic validayor ktory sprawdzi czy mozna zrobic date. cross field validation
 
 
 class DatesPopularitySerializer(serializers.ModelSerializer):

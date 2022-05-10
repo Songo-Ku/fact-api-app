@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from fun_fact.models import Dates
-from fun_fact.numbersapi import URL_NUM_API
+from fun_fact.numbersapi import URL_NUM_API, NumbersApiConnector
 from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer, DatesPopularitySerializer
 
 
@@ -52,24 +52,12 @@ class DatesCreateListDestroy(ModelCustomViewSet):
 
     def perform_create(self, serializer):
         print(serializer.validated_data['month'])
-        MONTHS_DICT = {
-            'January': 1, 'February': 2, 'March': 3,
-            'April': 4, 'May': 5, 'June': 6,
-            'July': 7, 'August': 8, 'September': 9,
-            'October': 10, 'November': 11, 'December': 12
-        }
-        url = URL_NUM_API.format(
-            MONTHS_DICT.get(serializer.validated_data['month']),
-            serializer.validated_data['day']
-        )
-        # print(url)
-        response = requests.get(url)
-        print(response)
-        print(response.content)
-        print(response.headers)
-
-        serializer.validated_data['fact'] = response.content.decode("utf-8")
-        # response.json()  # < do sprawdzenia
+        # print(response)
+        # print(response.content)
+        # print(response.headers)
+        print('to jest validated data', serializer.validated_data)
+        numbers_api = NumbersApiConnector(serializer.validated_data)
+        serializer.validated_data['fact'] = numbers_api.get_fact()
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
