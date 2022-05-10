@@ -1,11 +1,19 @@
 import requests
+
+from django.db.models.aggregates import Sum
+from django.db.models import Count, F, Value
+from django.db.models.expressions import Window
+from django.db.models.functions.window import Rank
+from django.db.models.functions import RowNumber
+
 from rest_framework import viewsets, permissions, status, mixins
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from fun_fact.models import Dates
-from fun_fact.numbersapi import URL_NUM_API
-from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer
+from fun_fact.numbersapi import URL_NUM_API, NumbersApiConnector
+from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer, DatesPopularitySerializer
 
 
 class ModelCustomViewSet(
@@ -44,24 +52,12 @@ class DatesCreateListDestroy(ModelCustomViewSet):
 
     def perform_create(self, serializer):
         print(serializer.validated_data['month'])
-        MONTHS_DICT = {
-            'January': 1, 'February': 2, 'March': 3,
-            'April': 4, 'May': 5, 'June': 6,
-            'July': 7, 'August': 8, 'September': 9,
-            'October': 10, 'November': 11, 'December': 12
-        }
-        url = URL_NUM_API.format(
-            MONTHS_DICT.get(serializer.validated_data['month']),
-            serializer.validated_data['day']
-        )
-        # print(url)
-        response = requests.get(url)
-        print(response)
-        print(response.content)
-        print(response.headers)
-
-        serializer.validated_data['fact'] = response.content.decode("utf-8")
-        # response.json()  # < do sprawdzenia
+        # print(response)
+        # print(response.content)
+        # print(response.headers)
+        print('to jest validated data', serializer.validated_data)
+        numbers_api = NumbersApiConnector(serializer.validated_data)
+        serializer.validated_data['fact'] = numbers_api.get_fact()
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
@@ -79,21 +75,11 @@ class DatesCreateListDestroy(ModelCustomViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ListViewset(mixins.ListModelMixin, GenericViewSet):
-    pass
+class PopularDateListAPIView(ListAPIView):
+    serializer_class = DatesPopularitySerializer
 
-
-class PopularViewSet(ListViewset):
-    serializer_class = DatesSerializer
-    queryset = Dates.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        qs = Dates.objects.values('month').annotate(days_checked=Count('id')).order_by('-days_checked', '-month')
+        for i in range(len(qs)):
+            qs[i].update({"id": len(qs) - i})
+        return qs
