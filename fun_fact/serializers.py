@@ -2,6 +2,21 @@ from rest_framework import serializers
 
 from fun_fact.models import Dates
 
+MONTHS_DICT = {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December",
+}
+
 
 class DatesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,9 +41,6 @@ class DatesCreateSerializer(serializers.ModelSerializer):
     def validate_month(self, value):
         print('validuje month')
         print(value)
-        MONTHS_DICT = {
-            "1": "January"
-        }
         if MONTHS_DICT.get(str(value)):
             return MONTHS_DICT.get(str(value))
         else:
@@ -36,8 +48,17 @@ class DatesCreateSerializer(serializers.ModelSerializer):
         return value
 
 
-class PopularListSerializer(serializers.ModelSerializer):
+# class PopularListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Dates
+#         fields = ['month', 'day', 'days_checked']
+#         read_only_fields = ['pk', 'fact']
+
+
+class DatesPopularitySerializer(serializers.ModelSerializer):
+    days_checked = serializers.ReadOnlyField()
+    serializers.IntegerField()
+
     class Meta:
         model = Dates
-        fields = ['month', 'day', 'days_checked']
-        read_only_fields = ['pk', 'fact']
+        fields = ['id', 'month', 'days_checked']

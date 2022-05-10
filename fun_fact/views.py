@@ -1,11 +1,19 @@
 import requests
+
+from django.db.models.aggregates import Sum
+from django.db.models import Count, F, Value
+from django.db.models.expressions import Window
+from django.db.models.functions.window import Rank
+from django.db.models.functions import RowNumber
+
 from rest_framework import viewsets, permissions, status, mixins
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from fun_fact.models import Dates
 from fun_fact.numbersapi import URL_NUM_API
-from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer
+from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer, DatesPopularitySerializer
 
 
 class ModelCustomViewSet(
@@ -79,21 +87,11 @@ class DatesCreateListDestroy(ModelCustomViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ListViewset(mixins.ListModelMixin, GenericViewSet):
-    pass
+class PopularDateListAPIView(ListAPIView):
+    serializer_class = DatesPopularitySerializer
 
-
-class PopularViewSet(ListViewset):
-    serializer_class = DatesSerializer
-    queryset = Dates.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        qs = Dates.objects.values('month').annotate(days_checked=Count('id')).order_by('-days_checked', '-month')
+        for i in range(len(qs)):
+            qs[i].update({"id": len(qs) - i})
+        return qs
