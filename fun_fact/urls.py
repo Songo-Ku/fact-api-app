@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from fun_fact.views import DatesCreateListDestroy, PopularDateListAPIView
+from fun_fact.views import FactDateCreateListDestroy, PopularDateListAPIView
 
 router = DefaultRouter()
-router.register(r'dates', DatesCreateListDestroy, basename='date')
+router.register(r'fact_dates', FactDateCreateListDestroy, basename='fact_dates')
 
 app_name = 'fun_fact'
 

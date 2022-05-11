@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Dates(models.Model):
+class FactDate(models.Model):
     MONTHS_CHOICES = (
         ('January', 1),
         ('February', 2),

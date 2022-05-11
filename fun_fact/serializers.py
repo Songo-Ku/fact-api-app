@@ -3,7 +3,7 @@ import socket
 from rest_framework import serializers
 import datetime
 
-from fun_fact.models import Dates
+from fun_fact.models import FactDate
 from fun_fact.numbersapi import MONTHS_DICT
 
 MONTHS_NUMBER_DICT = {
@@ -22,23 +22,23 @@ MONTHS_NUMBER_DICT = {
 }
 
 
-class DatesSerializer(serializers.ModelSerializer):
+class FactDateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dates
+        model = FactDate
         fields = ['month', 'day']
         read_only_fields = ['pk']
 
 
-class DatesListSerializer(serializers.ModelSerializer):
+class FactDateListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dates
+        model = FactDate
         fields = ['month', 'day', 'fact']
         read_only_fields = ['pk']
 
 
-class DatesCreateSerializer(serializers.ModelSerializer):
+class FactDateCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dates
+        model = FactDate
         fields = ['month', 'day', 'fact']
         read_only_fields = ['pk', 'fact']
 
@@ -64,10 +64,10 @@ class DatesCreateSerializer(serializers.ModelSerializer):
         return data
 
 
-class DatesPopularitySerializer(serializers.ModelSerializer):
+class FactDatePopularitySerializer(serializers.ModelSerializer):
     days_checked = serializers.ReadOnlyField()
     serializers.IntegerField()
 
     class Meta:
-        model = Dates
+        model = FactDate
         fields = ['id', 'month', 'days_checked']

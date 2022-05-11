@@ -11,9 +11,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from fun_fact.models import Dates
+from fun_fact.models import FactDate
 from fun_fact.numbersapi import URL_NUM_API, NumbersApiConnector
-from fun_fact.serializers import DatesSerializer, DatesCreateSerializer, DatesListSerializer, DatesPopularitySerializer
+from fun_fact.serializers import FactDateSerializer, FactDateCreateSerializer, FactDateListSerializer, \
+    FactDatePopularitySerializer
 
 
 class ModelCustomViewSet(
@@ -28,16 +29,16 @@ class ModelCustomViewSet(
     pass
 
 
-class DatesCreateListDestroy(ModelCustomViewSet):
-    serializer_class = DatesSerializer
-    queryset = Dates.objects.all()
+class FactDateCreateListDestroy(ModelCustomViewSet):
+    serializer_class = FactDateSerializer
+    queryset = FactDate.objects.all()
     permission_classes = []
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return DatesCreateSerializer
+            return FactDateCreateSerializer
         elif self.action == 'list':
-            return DatesListSerializer
+            return FactDateListSerializer
         return super().get_serializer_class()
 
     def create(self, request, *args, **kwargs):
@@ -76,10 +77,10 @@ class DatesCreateListDestroy(ModelCustomViewSet):
 
 
 class PopularDateListAPIView(ListAPIView):
-    serializer_class = DatesPopularitySerializer
+    serializer_class = FactDatePopularitySerializer
 
     def get_queryset(self):
-        qs = Dates.objects.values('month').annotate(days_checked=Count('id')).order_by('-days_checked', '-month')
+        qs = FactDate.objects.values('month').annotate(days_checked=Count('id')).order_by('-days_checked', '-month')
         for i in range(len(qs)):
             qs[i].update({"id": len(qs) - i})
         return qs
