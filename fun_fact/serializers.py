@@ -60,7 +60,7 @@ class FactDateCreateSerializer(serializers.ModelSerializer):
         try:
             datetime.datetime(year_, month_, day_)
         except:
-            raise serializers.ValidationError("Inproperly selected day and month. That date doesnt exist")
+            raise serializers.ValidationError("Inproperly selected day and month. That date doesnt exist!")
         return data
 
 

@@ -73,7 +73,18 @@ class FactDateCreateListDestroy(ModelCustomViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             print('nie ma autoryzacji')
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            # return Response(
+            #
+            #     status=status.HTTP_400_BAD_REQUEST
+            # )
+            return Response(
+                {
+                    "Failure": "Error",
+                    "Error_list": {"Authorized Error": "please add header to your delete action X-API-KEY"}
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
 
 
 class PopularDateListAPIView(ListAPIView):

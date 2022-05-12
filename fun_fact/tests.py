@@ -22,20 +22,23 @@ class FactDatesCreateListDestroyViewSetTestCase(APITestCase):
 
     @patch('fun_fact.numbersapi.NumbersApiConnector.get_fact')
     def test_create_correct_post_FactDates_status_201(self, mock):
-        mock.return_value = 'Xyz'
-        valid_FactDates = {"month": 1, "day": 31}
-        response = self.client.post(self.FactDates_url_list, data=valid_FactDates)
+        mock.return_value = 'zemsta faraona mocked value'
+        valid_fact_dates = {"month": 1, "day": 31}
+        response = self.client.post(self.FactDates_url_list, data=valid_fact_dates)
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_correct_post_FactDates_save_in_db(self):
-        valid_FactDates = {"month": 1, "day": 31}
-        response = self.client.post(self.FactDates_url_list, data=valid_FactDates)
+    @patch('fun_fact.numbersapi.NumbersApiConnector.get_fact')
+    def test_create_correct_post_FactDates_save_in_db(self, mock):
+        mock.return_value = 'zemsta faraona mocked value'
+        valid_fact_dates = {"month": 1, "day": 31}
+        response = self.client.post(self.FactDates_url_list, data=valid_fact_dates)
         self.assertEquals(FactDate.objects.count(), self.FactDates_amount_obj + 1)
 
+    def test_post_incorrect_date_status_400(self):
+        response = self.client.post(self.FactDates_url_list, data={"month": 13, "day": 32})
+        print(response.content_params)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-        # mockowanie
-        # 1 1
-        # JJanuary 1st is the day in 1994 that the Zapatista Army of National Liberation initiates twelve days of armed conflict in the Mexican State of Chiapas.
-        # 5 5
-        # May 5th is the day in 553 that the Second Council of Constantinople begins.
+
+
