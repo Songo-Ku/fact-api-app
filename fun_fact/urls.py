@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from fun_fact.views import FactDateCreateListDestroy, PopularDateListAPIView
 
 router = DefaultRouter()
-router.register(r'fact_dates', FactDateCreateListDestroy, basename='fact_dates')
+router.register(r'dates', FactDateCreateListDestroy, basename='fact_dates')
 
 app_name = 'fun_fact'
 
