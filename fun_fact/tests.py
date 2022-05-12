@@ -13,7 +13,7 @@ from fun_fact.models import FactDate
 class FactDatesCreateListDestroyViewSetTestCase(APITestCase):
     @classmethod
     def setUpClass(cls):
-        cls.FactDates_url_list = reverse("fun_fact:date-list")
+        cls.FactDates_url_list = reverse("fun_fact:fact_dates-list")
         cls.FactDates_obj_1 = FactDatesFactory()
         super().setUpClass()
 

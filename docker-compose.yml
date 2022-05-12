@@ -16,8 +16,7 @@ services:
       - db
     links:
       - db:db
-    networks:
-      - djangonetwork
+
   db:
     image: postgres:12
     volumes:
@@ -27,9 +26,5 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     container_name: db
-    networks:
-      - djangonetwork
 
-networks:
-  djangonetwork:
-    driver: bridge
+
