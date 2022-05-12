@@ -7,3 +7,5 @@ release:
     - django-admin migrate --noinput
 run:
   web: gunicorn src_fun_fact.wsgi
+volumes:
+  postgres_data:
