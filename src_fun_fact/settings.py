@@ -154,8 +154,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 #     ],
 # }
 
-STATICFILES_DIRS = (
-    os.path.join(STATIC_ROOT, 'css/'),
-    os.path.join(STATIC_ROOT, 'javascript/'),
-    os.path.join(STATIC_ROOT, 'images/')
-)
+# STATICFILES_DIRS = (
+#     os.path.join(STATIC_ROOT, 'css/'),
+#     os.path.join(STATIC_ROOT, 'javascript/'),
+#     os.path.join(STATIC_ROOT, 'images/')
+# )
