@@ -11,14 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import environ
 import os
-import django_heroku
-from pathlib import Path
 
 env = environ.Env()
 
 # Set the project base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -44,12 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'django.contrib.staticfiles',
 
     'fun_fact',
     'rest_framework',
-
-
 ]
 
 MIDDLEWARE = [
@@ -83,40 +77,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'src_fun_fact.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': env.db('DATABASE_URL'),
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'pizzeria',
-#         'USER': 'name',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -135,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -147,7 +110,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -156,11 +118,3 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATIC_URL = "/staticfiles/"
-#
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

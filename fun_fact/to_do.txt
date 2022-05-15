@@ -1,7 +1,0 @@
-testy
-poczatkowa
-koncowa
-druga
-wyjatki
-nie istniejace
-bledne dane

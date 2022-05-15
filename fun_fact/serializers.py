@@ -25,22 +25,22 @@ MONTHS_NUMBER_DICT = {
 class FactDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FactDate
-        fields = ['month', 'day']
-        read_only_fields = ['pk']
+        fields = ['id', 'month', 'day']
+        read_only_fields = ['id']
 
 
 class FactDateListSerializer(serializers.ModelSerializer):
     class Meta:
         model = FactDate
-        fields = ['month', 'day', 'fact']
-        read_only_fields = ['pk']
+        fields = ['id', 'month', 'day', 'fact']
+        read_only_fields = ['id']
 
 
 class FactDateCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FactDate
-        fields = ['month', 'day', 'fact']
-        read_only_fields = ['pk', 'fact']
+        fields = ['id', 'month', 'day', 'fact']
+        read_only_fields = ['id', 'fact']
 
     def validate_month(self, value):
         # print('validuje month')

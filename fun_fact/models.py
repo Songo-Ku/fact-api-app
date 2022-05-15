@@ -18,9 +18,7 @@ class FactDate(models.Model):
         ('November', 11),
         ('December', 12),
     )
-    # month = models.CharField(choices=MONTHS_CHOICES, max_length=60)
     month = models.CharField(max_length=60)
-
     day = models.IntegerField(
         validators=[
             MaxValueValidator(31),
